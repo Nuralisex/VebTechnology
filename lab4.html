@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Лабораторная 4. Загрузка задач из REST API с Fetch и async/await."><title>Планировщик — лабораторная 4</title><style>:root{font-family:system-ui,sans-serif;color:#17211d;background:#f4f7f5;--green:#176b53}*{box-sizing:border-box}body{margin:0;line-height:1.5}header,footer{background:#123f34;color:white;padding:1rem max(1rem,calc((100% - 1000px)/2))}header nav{display:flex;gap:1rem}header a,footer a{color:white}main{max-width:1000px;margin:2rem auto;padding:0 1rem}.card{background:white;border:1px solid #d7e2dc;border-radius:16px;padding:1.25rem}button{font:inherit;padding:.7rem 1rem;border:0;border-radius:9px;background:var(--green);color:white;font-weight:700;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #e7ae4b;outline-offset:2px}.task{padding:.75rem;border-bottom:1px solid #e5ece8}.task.done{text-decoration:line-through;color:#647168}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}.message{padding:.8rem;border-radius:9px;background:#e7f2ed}.error{background:#fff0ed;color:#7d2519}.empty{text-align:center;padding:2rem;color:#52645a}</style></head>
+<body><header><h1>Мой планировщик</h1><p>Лабораторная 4 · Fetch API, Promise, async/await</p><nav aria-label="Лабораторные"><a href="lab3.html">← Лаб. 3</a><a href="lab4.html" aria-current="page">Лаб. 4</a><a href="lab5.html">Лаб. 5 →</a></nav></header><main><section class="card"><div class="toolbar"><div><h2>Задачи из REST API</h2><p>Загружаем демо-данные и корректно показываем состояния запроса.</p></div><button id="reload" type="button">Загрузить задачи</button></div><p id="status" class="message" role="status" aria-live="polite">Нажмите «Загрузить задачи».</p><ul id="tasks" aria-label="Загруженные задачи" style="list-style:none;padding:0"></ul></section></main><footer><p>Источник данных: DummyJSON Todos API · Лабораторная 4 из 6</p></footer>
+<script type="module">
+const button = document.querySelector('#reload');
+const status = document.querySelector('#status');
+const list = document.querySelector('#tasks');
+const setStatus = (message, isError = false) => { status.textContent = message; status.classList.toggle('error', isError); };
+const render = (todos) => {
+  list.replaceChildren();
+  if (todos.length === 0) { const empty = document.createElement('li'); empty.className = 'empty'; empty.textContent = 'Список пока пуст.'; list.append(empty); return; }
+  for (const todo of todos) { const item = document.createElement('li'); item.className = `task${todo.completed ? ' done' : ''}`; item.textContent = `${todo.todo} ${todo.completed ? '— выполнено' : '— в работе'}`; list.append(item); }
+};
+const loadTodos = async () => {
+  button.disabled = true; setStatus('Загружаем задачи…'); list.replaceChildren();
+  try {
+    const response = await fetch('https://dummyjson.com/todos?limit=8');
+    if (!response.ok) throw new Error(`Сервер ответил с кодом ${response.status}.`);
+    const data = await response.json();
+    if (!Array.isArray(data.todos)) throw new Error('Сервер вернул данные в неожиданном формате.');
+    render(data.todos); setStatus(data.todos.length ? `Загружено задач: ${data.todos.length}.` : 'Запрос выполнен, задач нет.');
+  } catch (error) { setStatus(`Не удалось загрузить данные. ${error.message} Проверьте подключение и попробуйте ещё раз.`, true); }
+  finally { button.disabled = false; }
+};
+button.addEventListener('click', loadTodos);
+</script></body></html>

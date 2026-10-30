@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Лабораторная 1. Семантическая доступная форма планировщика задач.">
+  <title>Планировщик — лабораторная 1</title>
+</head>
+<body>
+  <a href="#main">Перейти к содержимому</a>
+  <header>
+    <h1>Мой планировщик</h1>
+    <p>Лабораторная 1 · Семантическая HTML-разметка и доступная форма</p>
+    <nav aria-label="Основная навигация"><a href="lab1.html" aria-current="page">Лабораторная 1</a> · <a href="lab2.html">Следующая: адаптивный интерфейс</a></nav>
+  </header>
+  <main id="main">
+    <section aria-labelledby="intro-title">
+      <h2 id="intro-title">Запланируйте важное</h2>
+      <p>Добавьте задачу в список. Поля с отметкой «обязательно» нужно заполнить.</p>
+    </section>
+    <section aria-labelledby="form-title">
+      <h2 id="form-title">Новая задача</h2>
+      <form action="#tasks" method="get">
+        <p><label for="title">Название задачи (обязательно)</label><br><input id="title" name="title" type="text" required minlength="2" maxlength="80" autocomplete="off"></p>
+        <p><label for="date">Срок выполнения (обязательно)</label><br><input id="date" name="date" type="date" required></p>
+        <p><label for="priority">Приоритет</label><br><select id="priority" name="priority"><option value="normal">Обычный</option><option value="high">Высокий</option><option value="low">Низкий</option></select></p>
+        <p><label for="notes">Описание</label><br><textarea id="notes" name="notes" rows="4" maxlength="300" aria-describedby="notes-help"></textarea><br><small id="notes-help">До 300 символов.</small></p>
+        <button type="submit">Добавить задачу</button>
+      </form>
+    </section>
+    <section id="tasks" aria-labelledby="tasks-title">
+      <h2 id="tasks-title">Пример списка</h2>
+      <ul><li><article><h3>Подготовить план недели</h3><p>Приоритет: высокий · Срок: <time datetime="2026-11-02">2 ноября</time></p></article></li></ul>
+    </section>
+  </main>
+  <footer><p>Основы современной веб-разработки · Лабораторная работа 1 из 6</p></footer>
+</body>
+</html>
